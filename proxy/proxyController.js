@@ -89,11 +89,13 @@ const ProxyController = (client, registry) => {
     });
 
     proxyRes.headers["access-control-allow-origin"] = '*';
+    delete proxyRes.headers["content-encoding"];
   })
 
   proxy.on('error', (err, req, res) => {
     res.writeHead(500, {
-      'Content-Type': 'text/plain'
+      'Content-Type': 'text/plain',
+      'Access-Control-Allow-Origin': '*'
     });
     res.end('Something went wrong: ' + err.message);
   })
@@ -165,12 +167,14 @@ const ProxyController = (client, registry) => {
       const url = apis?.bestAddress(type)
       if (!chain) {
         ctx.res.writeHead(404, {
-          'Content-Type': 'text/plain'
+          'Content-Type': 'text/plain',
+          'Access-Control-Allow-Origin': '*'
         });
         return ctx.res.end('Chain not found');
       } else if (!url) {
         ctx.res.writeHead(502, {
-          'Content-Type': 'text/plain'
+          'Content-Type': 'text/plain',
+          'Access-Control-Allow-Origin': '*'
         });
         return ctx.res.end('No servers available');
       }
